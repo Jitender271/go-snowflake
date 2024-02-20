@@ -1,0 +1,3 @@
+module github.com/go-snowflake
+
+go 1.21.3
