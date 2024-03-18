@@ -1,4 +1,4 @@
-package go_snowflake
+package main
 
 import (
 	"encoding/base64"
@@ -75,13 +75,12 @@ type Node struct {
 
 type ID int64
 
-func NewNode(node int64) (*Node, error) {
+func NewSnowflakeNode(node int64) (*Node, error) {
 
 	if NodeBits+StepBits > 22 {
 		return nil, errors.New("remember, you have a total 22 bits to share between Node/Step")
 	}
 	// re-calc in case custom NodeBits or StepBits were set
-	// DEPRECATED: the below block will be removed in a future release.
 	mu.Lock()
 	nodeMax = -1 ^ (-1 << NodeBits)
 	nodeMask = nodeMax << StepBits
@@ -109,9 +108,9 @@ func NewNode(node int64) (*Node, error) {
 	return &n, nil
 }
 
-// Generate creates and returns a unique snowflake ID
+// GenerateID creates and returns a unique snowflake ID
 
-func (n *Node) Generate() ID {
+func (n *Node) GenerateID() ID {
 
 	n.mu.Lock()
 	defer n.mu.Unlock()
@@ -302,7 +301,6 @@ func ParseIntBytes(id [8]byte) ID {
 }
 
 // Time returns an int64 unix timestamp in milliseconds of the snowflake ID time
-// DEPRECATED: the below function will be removed in a future release.
 func (f ID) Time() int64 {
 	return (int64(f) >> timeShift) + Epoch
 }
@@ -313,7 +311,7 @@ func (f ID) Node() int64 {
 }
 
 // Step returns an int64 of the snowflake step (or sequence) number
-// DEPRECATED: the below function will be removed in a future release.
+
 func (f ID) Step() int64 {
 	return int64(f) & stepMask
 }
