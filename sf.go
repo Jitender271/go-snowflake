@@ -1,4 +1,4 @@
-package snowflake
+package go_snowflake
 
 import (
 	"encoding/base64"
